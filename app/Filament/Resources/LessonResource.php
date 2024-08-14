@@ -16,6 +16,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\Text;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Course;
 
 class LessonResource extends Resource
 {
@@ -30,13 +33,17 @@ class LessonResource extends Resource
                 TextInput::make('title')
                     ->label('Title')
                     ->required(),
-                Textarea::make('content')
-                    ->label('Content')
-                    ->required(),
-                Select::make('course_id')
+                    Select::make('course_id')
                     ->label('Course')
-                    ->relationship('Course', 'title')
+                    ->options(function () {
+                        $user = Auth::user();
+                        return Course::where('instructor_id', $user->id)
+                        ->pluck('title', 'id');
+                    })
                     ->required(),
+                    Textarea::make('content')
+                        ->label('Content')
+                        ->required(),
             ]);
     }
 
@@ -45,13 +52,15 @@ class LessonResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('title')
-                ->searchable()
-                ->sortable(),
-                TextColumn::make('content')
-                ->searchable()
-                ->sortable(),
-                TextColumn::make('course_id')
                     ->searchable()
+                    ->sortable(),
+                TextColumn::make('course.title')
+                    ->label('Course')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('content')
+                    ->searchable()
+                    ->limit(35)
                     ->sortable(),
                 ])
             ->filters([
@@ -59,12 +68,24 @@ class LessonResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        // Get the IDs of the courses managed by the current instructor
+        $user = Auth::user();
+        $courseIds = Course::where('instructor_id', $user->id)->pluck('id');
+        
+        // Return the query filtered by the course IDs
+        return parent::getEloquentQuery()
+            ->whereIn('course_id', $courseIds);
     }
 
     public static function getRelations(): array

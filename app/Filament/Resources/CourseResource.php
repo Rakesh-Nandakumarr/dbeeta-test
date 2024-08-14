@@ -36,10 +36,6 @@ class CourseResource extends Resource
                 Textarea::make('description')
                     ->label('Description')
                     ->required(),
-                Select::make('instructor_id')
-                    ->label('Instructor')
-                    ->relationship('Instructor', 'name')
-                    ->required(),
             ]);
     }
 
@@ -53,7 +49,8 @@ class CourseResource extends Resource
                 TextColumn::make('category')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('instrutor_id')
+                TextColumn::make('instructor.name')
+                    ->label('Instructor')
                     ->searchable()
                     ->sortable(),
             ])
@@ -62,6 +59,7 @@ class CourseResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -75,6 +73,12 @@ class CourseResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->where('instructor_id', auth()->user()->id);
     }
 
     public static function getPages(): array

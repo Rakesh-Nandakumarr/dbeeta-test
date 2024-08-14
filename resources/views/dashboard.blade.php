@@ -2,36 +2,46 @@
     <div class="container mx-auto px-4 py-12">
         <h2 class="text-2xl font-bold mb-6">Your Courses Progress</h2>
 
-        @foreach ($enrollments as $enrollment)
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-gray-800">{{ $enrollment->course->title }}</h3>
-                    <p class="text-gray-600 mb-4">{{ $enrollment->course->category }}</p>
-
-                    <!-- Lessons List with Checkboxes -->
-                    <ul class="list-disc list-inside text-gray-700">
-                        @foreach ($enrollment->course->lessons as $lesson)
-                            <li class="flex items-center mt-2">
-                                <input 
-                                    type="checkbox" 
-                                    name="completed" 
-                                    value="1" 
-                                    {{ $enrollment->progress->where('lesson_id', $lesson->id)->first()?->is_completed ? 'checked' : '' }}
-                                    class="mr-2 lesson-checkbox"
-                                    data-lesson-id="{{ $lesson->id }}"
-                                    data-enrollment-id="{{ $enrollment->id }}"
-                                >
-                                <span>{{ $lesson->title }}</span>
-                            </li>
-                        @endforeach
-                    </ul>
-
-                    <a href="{{ route('course_show', $enrollment->course) }}" class="text-indigo-600 hover:text-indigo-500 mt-4 inline-block">
-                        View Course
-                    </a>
-                </div>
+        @if ($enrollments->isEmpty())
+            <!-- No Enrollments Message -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6 p-6 text-center">
+                <p class="text-gray-700 mb-4">You are not enrolled in any courses yet.</p>
+                <a href="/" class="text-indigo-600 hover:text-indigo-500 mt-4 inline-block">
+                    Browse Our Courses
+                </a>
             </div>
-        @endforeach
+        @else
+            @foreach ($enrollments as $enrollment)
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800">{{ $enrollment->course->title }}</h3>
+                        <p class="text-gray-600 mb-4">{{ $enrollment->course->category }}</p>
+
+                        <!-- Lessons List with Checkboxes -->
+                        <ul class="list-disc list-inside text-gray-700">
+                            @foreach ($enrollment->course->lessons as $lesson)
+                                <li class="flex items-center mt-2">
+                                    <input 
+                                        type="checkbox" 
+                                        name="completed" 
+                                        value="1" 
+                                        {{ $enrollment->progress->where('lesson_id', $lesson->id)->first()?->is_completed ? 'checked' : '' }}
+                                        class="mr-2 lesson-checkbox"
+                                        data-lesson-id="{{ $lesson->id }}"
+                                        data-enrollment-id="{{ $enrollment->id }}"
+                                    >
+                                    <span>{{ $lesson->title }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+
+                        <a href="{{ route('course_show', $enrollment->course) }}" class="text-indigo-600 hover:text-indigo-500 mt-4 inline-block">
+                            View Course
+                        </a>
+                    </div>
+                </div>
+            @endforeach
+        @endif
     </div>
 
     <!-- Script for AJAX request -->
