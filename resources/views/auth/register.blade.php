@@ -1,7 +1,7 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            <x-authentication-card-logo />
+            <img src="{{ asset('images/logo.png') }}" alt="logo" class="w-auto h-20" />
         </x-slot>
 
         <x-validation-errors class="mb-4" />
@@ -51,9 +51,10 @@
                     {{ __('Already registered?') }}
                 </a>
 
-                <x-button class="ms-4">
+                 <button type="submit" class="ml-5 inline-block bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-500 transition-colors duration-200">
                     {{ __('Register') }}
-                </x-button>
+                </button>
+
             </div>
         </form>
     </x-authentication-card>

@@ -39,9 +39,10 @@
                     </a>
                 @endif
 
-                <x-button class="ms-4">
+                <button type="submit" class="ml-5 inline-block bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-500 transition-colors duration-200">
                     {{ __('Log in') }}
-                </x-button>
+                </button>
+
             </div>
         </form>
     </x-authentication-card>
