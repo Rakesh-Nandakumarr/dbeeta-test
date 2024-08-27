@@ -11,7 +11,7 @@ class HomeController extends Controller
     public function index()
     {
         //get all the courses
-        $courses = Course::paginate(8);
+        $courses = Course::all();
 
         return view('home', compact('courses'));
     }

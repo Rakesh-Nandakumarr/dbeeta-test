@@ -37,7 +37,7 @@
                                 <p class="text-gray-600">{{ $enrollment->course->category }}</p>
                             </div>
                             <!-- View Course Link -->
-                            <a href="{{ route('course_show', $enrollment->course) }}" class="text-indigo-600 hover:text-indigo-500">
+                            <a href="{{ route('course.show', $enrollment->course) }}" class="text-indigo-600 hover:text-indigo-500">
                                 View Course
                             </a>
                         </div>

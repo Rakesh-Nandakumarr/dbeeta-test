@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('instructor_id');
             $table->string('title');
             $table->string('category');
+            $table->integer('price');
             $table->longText('description');
             $table->timestamps();
         });

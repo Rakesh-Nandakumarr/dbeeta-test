@@ -36,6 +36,9 @@ class CourseResource extends Resource
                 Textarea::make('description')
                     ->label('Description')
                     ->required(),
+                TextInput::make('price')
+                    ->label('Price')
+                    ->required(),
             ]);
     }
 

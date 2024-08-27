@@ -6,8 +6,33 @@
 
         <x-validation-errors class="mb-4" />
 
-        <form method="POST" action="{{ route('register') }}">
+        <form method="POST" action="{{ route('register') }}" class="relative">
             @csrf
+
+            <div x-data="{ open: false, selected: 'student' }" class="absolute top-4 right-4">
+                <button @click="open = !open" type="button" class="flex items-center bg-gray-200 border border-gray-300 rounded-md py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <span x-text="selected.charAt(0).toUpperCase() + selected.slice(1)"></span>
+                    <svg class="w-5 h-5 inline ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+
+                <div x-show="open" @click.away="open = false" class="absolute mt-2 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                    <ul class="py-1">
+                        <li>
+                            <a href="#" @click.prevent="selected = 'instructor'; open = false; $refs.roleInput.value = 'instructor'" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                Instructor
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" @click.prevent="selected = 'student'; open = false; $refs.roleInput.value = 'student'" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                Student
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <input type="hidden" name="role" x-ref="roleInput" :value="selected">
+            </div>
+            <br><br>
 
             <div>
                 <x-label for="name" value="{{ __('Name') }}" />
@@ -51,10 +76,9 @@
                     {{ __('Already registered?') }}
                 </a>
 
-                 <button type="submit" class="ml-5 inline-block bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-500 transition-colors duration-200">
+                <button type="submit" class="ml-5 inline-block bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-500 transition-colors duration-200">
                     {{ __('Register') }}
                 </button>
-
             </div>
         </form>
     </x-authentication-card>

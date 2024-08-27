@@ -8,6 +8,15 @@
         </div>
     @endif
 
+    <!-- Display Error Message -->
+    @if (session('error'))
+        <div class="container mx-auto px-4 py-4">
+            <div class="bg-red-600 text-white text-center py-3 px-6 rounded-lg shadow-lg">
+                {{ session('error') }}
+            </div>
+        </div>
+    @endif
+
     <!-- Course Detail Section -->
     <div class="container mx-auto px-4 py-12 max-w-4xl">
         <!-- Back Button -->
@@ -50,7 +59,7 @@
                 <!-- Enroll Now Button -->
                 @if (auth()->user()->role !== 'instructor' && !$isEnrolled)
                     <div class="mt-8">
-                        <form action="{{ route('course_enroll', $course->id) }}" method="POST">
+                        <form action="{{ route('course.enroll', $course->id) }}" method="POST">
                             @csrf
                             <button 
                                 type="submit" 
